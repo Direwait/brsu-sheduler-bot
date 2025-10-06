@@ -3,7 +3,7 @@ from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes, CommandHandler, MessageHandler, filters
 
 from src.app.scheduler.api_logic import save_user_data, get_groups_by_fakultet_and_course, get_user_data, get_schedule, \
-    format_schedule_message
+format_schedule_messages
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -69,13 +69,15 @@ async def handle_group(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_user_data(user_id, 'schedule', schedule)
 
         if schedule:
-            message = format_schedule_message(schedule, 'all')
-            await update.message.reply_text(message)
+            messages = format_schedule_messages(schedule, 'all') # Получаем список сообщений
+            for message in messages:
+                await update.message.reply_text(message) # Отправляем каждое сообщение
 
         # И потом показываем меню дней
         await show_menu(update, schedule)
     else:
         await update.message.reply_text("❌ Ошибка данных")
+
 
 async def show_menu(update: Update, schedule):
     keyboard = [
@@ -104,14 +106,15 @@ async def handle_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
             'ВСЯ НЕДЕЛЯ': 'all'
         }
 
-        # 🎯 УБИРАЕМ 'all' КАК ЗНАЧЕНИЕ ПО УМОЛЧАНИЮ
         days = day_map.get(day)
         if not days:
             await update.message.reply_text("❌ Неизвестный день")
             return
 
-        message = format_schedule_message(schedule, days)
-        await update.message.reply_text(message)
+        messages = format_schedule_messages(schedule, days) # Получаем список сообщений
+        for message in messages:
+            await update.message.reply_text(message) # Отправляем каждое сообщение
+
     else:
         await update.message.reply_text("❌ Сначала выбери группу")
 

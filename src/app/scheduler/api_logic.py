@@ -52,29 +52,28 @@ def get_groups_by_fakultet_and_course(fakultet, course_type):
         return []
 
 
-def format_schedule_message(schedule_data, days='all'):
-    """Красивое форматирование расписания для Telegram"""
+def format_schedule_messages(schedule_data, days='all'):
+    """Форматирует расписание в список сообщений для Telegram, по одному на каждый день."""
     if not schedule_data:
-        return "❌ *Расписание не найдено*"
+        return ["❌ *Расписание не найдено*"]
 
-    message = ""
+    messages = []  # Список для хранения сообщений
 
     for course_name, days_schedule in schedule_data.items():
-        message += f"\n🎓 *{course_name.upper()}*\n"
-        message += "─" * 30 + "\n"
-
+        # Для каждого курса
         if days == 'all':
             days_to_show = list(days_schedule.keys())
         else:
             days_to_show = days
 
         for day in days_to_show:
+            message = ""
             day_upper = day.upper()
             for schedule_day, lessons in days_schedule.items():
                 if day_upper in schedule_day:
-                    txt=schedule_day.upper()
-                    message += f"\n📅 *{txt.replace("ПОНЕД","ПОНЕДЕЛЬНИК")}*\n"
-
+                    txt = schedule_day.upper()
+                    message += f"\n📅 *{txt.replace('ПОНЕД', 'ПОНЕДЕЛЬНИК')}*\n"
+                    message += "─" * 30 + "\n"
                     has_lessons = False
                     lesson_count = 0
 
@@ -86,7 +85,7 @@ def format_schedule_message(schedule_data, days='all'):
                                             .replace('2 ', '2️⃣ ')
                                             .replace('3 ', '3️⃣ ')
                                             .replace('4 ', '4️⃣ ')
-                            )
+                                            )
                             lesson_text = lesson['lesson']
 
                             message += f"\n{time_display}\n"
@@ -129,10 +128,10 @@ def format_schedule_message(schedule_data, days='all'):
                         message += f"\n📊 Всего пар: {lesson_count}\n"
                     else:
                         message += "\n🎉 Выходной день!\n"
+                    messages.append(message) # Добавляем сформированное сообщение в список
 
-                    message += "─" * 30 + "\n"
+    return messages if messages else ["❌ *Нет пар на выбранные дни*"]
 
-    return message if message else "❌ *Нет пар на выбранные дни*"
 
 """Получаем расписание через твои функции"""
 #итоговый метод

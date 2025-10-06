@@ -2,7 +2,7 @@
 import xlrd
 import requests
 from io import BytesIO
-from src.app.service.find_url.FileFinder import newest_files
+
 
 
 
@@ -26,7 +26,6 @@ def create_matrix_with_merged_cells_xlrd(sheet):
             for col_idx in range(clo, chi):
                 if row_idx < len(data) and col_idx < len(data[row_idx]):
                     data[row_idx][col_idx] = top_left_value
-    print(data)
     return data
 
 """Парсим расписание для указанной группы"""
@@ -168,27 +167,3 @@ def print_schedule(schedule_data, days='all'):
                     status = "✅" if lesson['lesson'] != "-" else "❌"
                     print(f"   {status} {lesson['time']} - {lesson['lesson']}")
                 break
-
-# Использование:
-def main():
-    url = "https://www.brsu.by/fiziko-matematicheskij-fakultet"
-    act, sec = newest_files(url)
-
-    schedule = parse_schedule_with_xlrd(act, "МИ-21", "2 курс")
-
-    if schedule:
-        for course_name, days_schedule in schedule.items():
-            print(f"\n{'='*50}")
-            print(f"📘 {course_name}:")
-            print(f"{'='*50}")
-
-            # Вся неделя
-            print_schedule(days_schedule, 'all')
-
-            print_schedule(days_schedule, ['понед'])
-
-    else:
-        print(f"❌ Расписание не найдено")
-
-if __name__ == "__main__":
-    main()
