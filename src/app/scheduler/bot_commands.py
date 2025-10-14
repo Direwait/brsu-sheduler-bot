@@ -93,7 +93,6 @@ async def show_menu(update: Update, schedule):
 async def handle_day(update: Update, context: ContextTypes.DEFAULT_TYPE):
     day = update.message.text
     user_id = update.effective_user.id
-
     schedule = get_user_data(user_id, 'schedule')
     if schedule:
         day_map = {
