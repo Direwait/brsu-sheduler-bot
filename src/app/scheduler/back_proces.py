@@ -8,7 +8,6 @@ from src.app.service.find_url.FileFinder import newest_files
 
 async def background_checker(app: Application):
     """Простой фоновый проверяльщик - НЕ ЛОМАЕТ СУЩЕСТВУЮЩИЙ КОД"""
-    # Словарь для отслеживания последних версий файлов
     last_files = {}
 
     print("🔄 Фоновая проверка расписания запущена")
@@ -67,5 +66,3 @@ async def notify_fakultet_users(app: Application, fakultet: str):
                 print(f"✅ Уведомление отправлено пользователю {user_id}")
             except Exception as e:
                 print(f"❌ Не удалось уведомить {user_id}: {e}")
-
-    print(f"📨 Отправлено уведомлений: {notified_count}")

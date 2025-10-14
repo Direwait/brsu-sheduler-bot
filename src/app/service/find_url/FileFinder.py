@@ -54,9 +54,7 @@ def newest_files(page_url) -> tuple:
             else:
                 print("📎 Предпоследний файл: не найден")
 
-            # Возвращаем оба пути
             return newest_file, second_newest_file
-
         else:
             print("❌ Excel файлы не найдены на странице")
             return None, None

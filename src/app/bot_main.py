@@ -25,7 +25,8 @@ def main():
     # Запускаем бота
     print("🤖 Бот запущен...")
     application.run_polling()
-    asyncio.create_task(background_checker(application))
+
+    #asyncio.create_task(background_checker(application))
 
 if __name__ == "__main__":
     main()

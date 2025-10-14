@@ -45,8 +45,6 @@ def parse_group_schedule(data_matrix, group_name):
         print(f"❌ Группа {group_name} не найдена")
         return {}
 
-    print(f"✅ Найдена группа {group_name} в колонке {group_col}")
-
     # Находим дни недели (ищем строки с названиями дней)
     days = {}
     day_patterns = ['ПОНЕД', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА', 'СУББОТА']
@@ -57,7 +55,6 @@ def parse_group_schedule(data_matrix, group_name):
             for day in day_patterns:
                 if day in cell_text:
                     days[day] = row_idx
-                    print(f"📅 Найден {day} в строке {row_idx}")
 
     # Парсим расписание для группы
     schedule = {}
@@ -88,9 +85,6 @@ def parse_group_schedule(data_matrix, group_name):
                 'time': time_slot,
                 'lesson': lesson_text
             })
-
-            print(f"   🕒 {day_name}, Пара {offset}: {time_slot} - {lesson_text}")
-
         schedule[day_name] = day_lessons
 
     return schedule
@@ -123,11 +117,9 @@ def parse_schedule_with_xlrd(url, group_name, sheet_type=None)->dict:
 
                 if type_lower == "магистратура":
                     if not any(word in sheet_lower for word in ['м', 'магистр', 'магистратура']):
-                        print(f"⏭️  Пропускаем (ищем магистратуру)")
                         continue
                 elif type_lower in ["1 курс", "2 курс", "3 курс", "4 курс"]:
                     if type_lower not in sheet_lower:
-                        print(f"⏭️  Пропускаем (ищем {sheet_type})")
                         continue
 
             data_matrix = create_matrix_with_merged_cells_xlrd(sheet)
@@ -135,12 +127,11 @@ def parse_schedule_with_xlrd(url, group_name, sheet_type=None)->dict:
 
             if group_schedule:
                 all_schedules[sheet_name] = group_schedule
-                print(f"✅ Найдено расписание для {group_name}")
 
         return all_schedules
 
     except Exception as e:
-        print(f"❌ Ошибка: {e}")
+        print(f"❌ Неизвестная Ошибка: {e}")
         return {}
 
 def print_schedule(schedule_data, days='all'):
